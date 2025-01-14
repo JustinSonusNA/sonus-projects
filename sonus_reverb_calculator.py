@@ -17,12 +17,16 @@ MATERIALS_LIBRARY = {
     "Unpainted Concrete": [0.02, 0.02, 0.02, 0.03, 0.03, 0.04, 0.05],
     "Painted Concrete": [0.02, 0.03, 0.03, 0.03, 0.04, 0.05, 0.05],
     "Wood Flooring": [0.10, 0.07, 0.06, 0.05, 0.06, 0.07, 0.09],
-    "Drywall": [0.15, 0.10, 0.05, 0.04, 0.04, 0.05, 0.05],
+    "LVT Flooring" : [0.03, 0.05, 0.15, 0.17, 0.20, 0.15, 0.15 ],
+    "Gypsum on Masonry": [0.01, 0.02, 0.02, 0.04, 0.04, 0.04, 0.05],
+    "Gypsum on Wood" : [0.06, 0.06, 0.06, 0.05, 0.04, 0.04, 0.03],
     "Glass Window": [0.02, 0.03, 0.03, 0.03, 0.02, 0.02, 0.02],
-    "Carpet (on concrete)":   [0.04, 0.10, 0.20, 0.35, 0.50, 0.60, 0.65],
+    "Carpet (on concrete)": [0.04, 0.10, 0.20, 0.35, 0.50, 0.60, 0.65],
     "Open Plenum Ceiling": [0.05, 0.07, 0.08, 0.10, 0.12, 0.13, 0.15],
-    "Acoustic Ceiling Tile": [0.35, 0.65, 0.75, 0.80, 0.85, 0.85, 0.90],
+    "Acoustic Ceiling Tile": [0.20, 0.40, 0.65, 0.75, 0.80, 0.85, 0.85],
     "Unpainted Brick": [0.02, 0.03, 0.04, 0.05, 0.05, 0.05, 0.06],
+    "Painted Brick": [0.01, 0.01, 0.02, 0.02, 0.02, 0.02, 0.03],
+    "Water" : [0.008, 0.008, 0.013, 0.015, 0.015, 0.02, 0.025],
     # Add more materials as needed...
 }
 
@@ -48,7 +52,7 @@ TREATMENT_LIBRARY = {
     "Surround Stratus Felt Cloud": [0.67, 0.54, 1.01, 1.48, 1.79, 1.95, 1.84,],
     "Waffle Iron": [0.13, 0.28, 0.55, 0.73, 0.94, 1.33, 1.49],
     "Slat Attack": [0.21, 0.40, 0.70, 0.90, 1.10, 1.04],
-    "Truss Me Baffle": [0.23, 0.39, 0.59, 0.68, 0.85, 1.05, 1.05, 1.18]
+    "Truss Me Baffle": [0.23, 0.39, 0.59, 0.68, 0.85, 1.05, 1.05,]
 
     # Add more treatments as needed...
 }
@@ -239,20 +243,20 @@ def add_material_selector(library, index, key_prefix):
 def main():
     st.title("Sonus Room Reverberation Calculator")
     st.write(
-        "This application calculates the RT60 (reverb time) "
-        "of a rectangular room using Sabine's Equation. "
-        "Add Sonus products to see how they treat your space!"
+        "This application estimates the reverberation time (RT60) "
+        "of a room. "
+        "Add Sonus products to see how they treat your space in the graph below!"
     )
 
     # Room Type Selection
-    st.header("Select a Room Type")
+    st.header("How would you describe the space?")
     room_type = st.selectbox(
         "Room Type",
         list(ROOM_TYPE_IDEALS.keys()),
         index=0
     )
     # Room dimension inputs
-    st.header("Room Dimensions")
+    st.header("How big is it?")
     col_dim1, col_dim2, col_dim3 = st.columns(3)
     with col_dim1:
         length_ft = st.number_input("Length (ft)", min_value=1.0, value=20.0)
@@ -330,10 +334,10 @@ def main():
     # -------------------------------------------
     # Materials Section - Treatments
     # -------------------------------------------
-    st.header("Acoustic Treatments")
+    st.header("Lets Add Some Acoustics!")
     st.write(
         "Specify which Sonus products to add to the room. "
-        "These absorption values will be added to the untreated surfaces."
+        "Try to fit the orange line into the green shaded area of the graph for optimal acoustics."
     )
     
     if "treatment_count" not in st.session_state:
@@ -355,12 +359,7 @@ def main():
         treatment_entries[f"treated_mat_{i}"] = (mat_name, area)
         total_treatment_area += area
 
-        # Room Type Selection
-    room_type = "Classroom"  # Example, replace with actual selection logic
-    length_ft = 20.0  # Replace with actual input logic
-    width_ft = 15.0   # Replace with actual input logic
-    height_ft = 10.0  # Replace with actual input logic
-    stats = calculate_room_stats(length_ft, width_ft, height_ft)
+
 
     # Untreated Materials
     untreated_dict = {}
@@ -483,10 +482,15 @@ def main():
     })
     st.table(results_df.round(2))
 
-    # -------------------------------------------
-# Generate Report Function
-# -------------------------------------------
-
+    st.header("What's next?")
+    st.write(
+        "Now that you know how much you'll need, you can reach out for an estimate! "
+    )
+    if st.button("Let's Go!"):
+        # Inject JavaScript to open a new window or tab
+        contact_link = "https://www.sonusna.com/forms/get-estimate"
+        js_code = f"window.open('{contact_link}');"
+        st.markdown(f"<script>{js_code}</script>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
