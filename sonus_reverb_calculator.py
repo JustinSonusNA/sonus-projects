@@ -483,14 +483,11 @@ def main():
     st.table(results_df.round(2))
 
     st.header("What's next?")
-    st.write(
-        "Now that you know how much you'll need, you can reach out for an estimate! "
-    )
-    if st.button("Let's Go!"):
-        # Inject JavaScript to open a new window or tab
-        contact_link = "https://www.sonusna.com/forms/get-estimate"
-        js_code = f"window.open('{contact_link}');"
-        st.markdown(f"<script>{js_code}</script>", unsafe_allow_html=True)
+    st.write("Now that you know how much you'll need, you can reach out for an estimate!")
+    st.markdown(
+    "[Let's Go!](https://www.sonusna.com/forms/get-estimate)",
+    unsafe_allow_html=True,
+)
 
 if __name__ == "__main__":
     main()
