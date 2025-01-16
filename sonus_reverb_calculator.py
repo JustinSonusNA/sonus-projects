@@ -3,11 +3,63 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from io import BytesIO
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from fpdf import FPDF
+import os
+import tempfile
 
+# PDF class
+class PDF(FPDF):
+    def header(self):
+        self.set_font('Arial', 'B', 16)
+        self.cell(0, 10, 'Acoustic Treatment Simulation Report', align='C', ln=True)
+
+    def footer(self):
+        self.set_y(-15)
+        self.set_font('Arial', 'I', 10)
+        self.cell(0, 10, f'Page {self.page_no()}', align='C')
+
+def create_simple_pdf(data, plot_img_buffer):
+    # Create the PDF
+    pdf = PDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    
+    # Add text
+    pdf.cell(200, 10, txt=f"Room Type: {data['[RoomType]']}", ln=True)
+    pdf.cell(200, 10, txt=f"Ideal RT60: {data['[Ideal RT]']}", ln=True)
+    pdf.cell(200, 10, txt=f"Room Volume: {data['[Volume]']}", ln=True)
+
+    # Check the plot image buffer
+    plot_img_buffer.seek(0)
+    buffer_content = plot_img_buffer.read()
+    if len(buffer_content) == 0:
+        raise ValueError("The plot image buffer is empty. Check if fig.savefig() failed.")
+
+    # Write to a temp file
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_img:
+        temp_img.write(buffer_content)
+        temp_img_path = temp_img.name
+
+    # Confirm the temp file is valid
+    if not os.path.exists(temp_img_path) or os.path.getsize(temp_img_path) == 0:
+        raise ValueError("Temporary image file is invalid or empty. Check plot generation.")
+
+    # Insert the image into the PDF
+    pdf.image(temp_img_path, x=10, y=100, w=180)
+
+    # Clean up temp file
+    try:
+        os.remove(temp_img_path)
+    except FileNotFoundError:
+        pass
+
+    # Finally, return the PDF as bytes
+    pdf_data = pdf.output(dest="S").encode("latin-1")
+    return pdf_data
+
+
+
+    
 # -----------------------------------------------
 # 1. Define the Materials Library
 # -----------------------------------------------
@@ -473,6 +525,21 @@ def main():
         )
     
     st.pyplot(fig)
+
+    # Save plot to a BytesIO buffer
+    plot_img_buffer = BytesIO()
+    fig.savefig(plot_img_buffer, format='png')
+
+
+    pdf_data = create_simple_pdf(data, plot_img_buffer)
+    st.download_button(
+    label="Download PDF",
+    data=pdf_data,
+    file_name="Acoustic_Report.pdf",
+    mime="application/pdf"
+)
+
+
 
     # Display numeric RT60 values in a table
     results_df = pd.DataFrame({
