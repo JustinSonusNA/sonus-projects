@@ -26,7 +26,7 @@ def create_simple_pdf(data, plot_img_buffer):
     
     # Add text
     pdf.cell(200, 10, txt=f"Room Type: {data['[RoomType]']}", ln=True)
-    pdf.cell(200, 10, txt=f"Ideal RT60: {data['[Ideal RT]']}", ln=True)
+    pdf.cell(200, 10, txt=f"Room Dimensions: {data['[Dimensions]']}", ln=True)
     pdf.cell(200, 10, txt=f"Room Volume: {data['[Volume]']}", ln=True)
 
     # Check the plot image buffer
@@ -329,6 +329,7 @@ def main():
         "[RoomType]": room_type,
         "[Ideal RT]": f"{min_ideal:.1f} - {max_ideal:.1f} seconds",
         "[Volume]": f"{stats['volume']:.2f} ft³",
+        "[Dimensions]": f"{length_ft} ft x {width_ft} ft x {height_ft} ft",
         "[RT60 Untreated]": "1.5 seconds",  # Example placeholder
         "[RT60 Treated]": "0.8 seconds",  # Example placeholder
         "[Date]": "01/01/2025",  # Example placeholder
