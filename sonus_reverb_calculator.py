@@ -293,7 +293,8 @@ def add_material_selector(library, index, key_prefix):
 # 3. Streamlit App Layout
 # -----------------------------------------------
 def main():
-    st.title("Sonus Room Reverberation Calculator")
+    st.image("https://cdn.prod.website-files.com/5f4fd16f2ee589243cb76265/5f5946dcec483bc9fd5959bc_sonus-brandmark-color-web.svg", width=200)
+    st.title("Reverberation Calculator")
     st.write(
         "This application estimates the reverberation time (RT60) "
         "of a room. "
@@ -358,7 +359,7 @@ def main():
     )
     
     # Dynamic input for materials
-    st.subheader("Untreated Materials")
+    st.subheader("Add Materials")
     if "material_count" not in st.session_state:
         st.session_state["material_count"] = 1  # start with one row
     
@@ -390,7 +391,7 @@ def main():
     st.header("Lets Add Some Acoustics!")
     st.write(
         "Specify which Sonus products to add to the room. "
-        "Try to fit the orange line into the green shaded area of the graph for optimal acoustics."
+        "Try to fit the orange line into the green shaded area of the graph below for optimal acoustics."
     )
     
     if "treatment_count" not in st.session_state:
