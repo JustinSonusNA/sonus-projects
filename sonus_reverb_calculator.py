@@ -25,6 +25,7 @@ def create_simple_pdf(data, plot_img_buffer):
     pdf.set_font("Arial", size=12)
     
     # Add text
+    pdf.cell(200, 10, txt=f"Project Name: {data['[Project Name]']}", ln=True)
     pdf.cell(200, 10, txt=f"Room Type: {data['[RoomType]']}", ln=True)
     pdf.cell(200, 10, txt=f"Room Dimensions: {data['[Dimensions]']}", ln=True)
     pdf.cell(200, 10, txt=f"Room Volume: {data['[Volume]']}", ln=True)
@@ -300,12 +301,16 @@ def main():
         "of a room. "
         "Add Sonus products to see how they treat your space in the graph below!"
     )
+    data = {}
 
-    # Room Type Selection
-    st.header("How would you describe the space?")
+    # Project Name Input
+    st.header("Project Details")
+    project_name = st.text_input("Project Name:", "")
+    if project_name:
+        data["[Project Name]"] = project_name
     room_type = st.selectbox(
-        "Room Type",
-        list(ROOM_TYPE_IDEALS.keys()),
+        "Select the room type:",
+        options=list(ROOM_TYPE_IDEALS.keys()),
         index=0
     )
     # Room dimension inputs
@@ -327,14 +332,13 @@ def main():
     max_ideal = max([r[1] for r in ideal_ranges.values()])
 
     data = {
+        "[Project Name]": project_name,
         "[RoomType]": room_type,
         "[Ideal RT]": f"{min_ideal:.1f} - {max_ideal:.1f} seconds",
         "[Volume]": f"{stats['volume']:.2f} ft³",
         "[Dimensions]": f"{length_ft} ft x {width_ft} ft x {height_ft} ft",
-        "[RT60 Untreated]": "1.5 seconds",  # Example placeholder
-        "[RT60 Treated]": "0.8 seconds",  # Example placeholder
-        "[Date]": "01/01/2025",  # Example placeholder
-        "[Project Name]": "Conference Room Acoustic Analysis"
+    
+        
     }
     
     # Display stats in an info box
