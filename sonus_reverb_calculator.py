@@ -30,6 +30,16 @@ def create_simple_pdf(data, plot_img_buffer):
     pdf.cell(200, 10, txt=f"Room Dimensions: {data['[Dimensions]']}", ln=True)
     pdf.cell(200, 10, txt=f"Room Volume: {data['[Volume]']}", ln=True)
 
+    # Add description
+    pdf.ln(10)  # Add a line break
+    pdf.set_font("Arial", size=11)
+    description = (
+        "This plot shows the calculated reverberation time of the described space "
+        "before and after the acoustic treatment. The green shaded area of the plot "
+        "represents the 'ideal' reverberation time for a room of this type."
+    )
+    pdf.multi_cell(0, 10, txt=description)  # Add description with text wrapping
+
     # Check the plot image buffer
     plot_img_buffer.seek(0)
     buffer_content = plot_img_buffer.read()
