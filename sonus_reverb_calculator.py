@@ -7,6 +7,8 @@ from fpdf import FPDF
 import os
 import tempfile
 
+
+logo_path = "sonus_black_logo.png"
 # PDF class
 class PDF(FPDF):
     def header(self):
@@ -20,8 +22,11 @@ class PDF(FPDF):
 
 def create_simple_pdf(data, plot_img_buffer):
     # Create the PDF
+    logo_path = "sonus_black_logo.png"
     pdf = PDF()
     pdf.add_page()
+    # Add the logo
+    pdf.image("sonus_black_logo.png", x=10, y=8, w=40)  # Adjust 'x', 'y', and 'w' as needed
     pdf.set_font("Arial", size=12)
     
     # Add text
@@ -548,6 +553,7 @@ def main():
 
 
     pdf_data = create_simple_pdf(data, plot_img_buffer)
+    logo_path = "sonus_black_logo.png"
     st.download_button(
     label="Download PDF",
     data=pdf_data,
