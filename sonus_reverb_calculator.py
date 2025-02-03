@@ -206,6 +206,15 @@ ROOM_TYPE_IDEALS = {
         2000: (0.7, 1.0),
         3150: (0.7, 1.0)
     },
+        "Lecture Hall": {
+        160: (1.0, 1.5),
+        250: (0.9, 1.3),
+        500: (0.8, 1.1),
+        800: (0.7, 1.0),
+        1250: (0.7, 1.0),
+        2000: (0.7, 1.0),
+        3150: (0.7, 0.9)
+    },     
 
     # Add more room types as desired...
 
@@ -505,6 +514,11 @@ def main():
     # Plot Results
     # -------------------------------------------
     st.header("Calculated Reverberation Times (RT60)")
+    st.write(
+        "The blue line represents the reverb time of your space without acoustic treatment. "
+        "The orange line represents the RT of the space with the selected treatment applied. "
+        "The green shaded area represents the recommended RT for this type of space based on ANSI/ASA Standards. "
+    )
 
     fig, ax = plt.subplots(figsize=(6, 4))
     ax.plot(FREQUENCIES, rt60_untreated, marker='o', label="Untreated")
